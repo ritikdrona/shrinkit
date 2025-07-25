@@ -1,0 +1,16 @@
+spring:
+  application.name: ShrinkIt Server
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shrinkit
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+server:
+  port: 8000
+  servlet:
+    context-path: /api
+jwt:
+  secretKey: asdebhuabKSADHJSAIDHSADncajhsdbcaudaAShbdkas
+  expiration: 2 # in hours

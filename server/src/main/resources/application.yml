@@ -17,3 +17,6 @@ jwt:
 logging:
   level:
     root: DEBUG
+springdoc:
+  api-docs:
+    path: /openapi.json

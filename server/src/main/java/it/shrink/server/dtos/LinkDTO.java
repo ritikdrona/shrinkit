@@ -7,7 +7,7 @@ public class LinkDTO {
 
   String id;
 
-  String shortUrl;
+  String shortcut;
 
   String actualUrl;
 }

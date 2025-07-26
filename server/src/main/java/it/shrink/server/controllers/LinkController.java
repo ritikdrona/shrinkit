@@ -1,7 +1,10 @@
 package it.shrink.server.controllers;
 
 import it.shrink.server.dtos.LinkDTO;
+import it.shrink.server.dtos.request.ApiSingleRequest;
 import it.shrink.server.dtos.request.LinkCreationRequestDTO;
+import it.shrink.server.dtos.response.ApiResponse;
+import it.shrink.server.dtos.response.ApiSingleResponse;
 import it.shrink.server.dtos.response.DeletionResponseDTO;
 import it.shrink.server.services.LinkService;
 import java.util.List;
@@ -18,28 +21,30 @@ public class LinkController {
   final LinkService linkService;
 
   @GetMapping
-  public ResponseEntity<List<LinkDTO>> getLink() {
+  public ResponseEntity<ApiResponse<LinkDTO>> getLinks() {
     List<LinkDTO> links = linkService.getLinksByUserId("userId");
-    return new ResponseEntity<>(links, HttpStatus.OK);
+    return new ResponseEntity<>(new ApiResponse<>(links), HttpStatus.OK);
   }
 
   @PostMapping
-  public ResponseEntity<LinkDTO> createLink(
-      @RequestBody LinkCreationRequestDTO linkCreationRequestDTO) {
-    LinkDTO link = linkService.createLink("userId", linkCreationRequestDTO);
-    return new ResponseEntity<>(link, HttpStatus.OK);
+  public ResponseEntity<ApiSingleResponse<LinkDTO>> createLink(
+      @RequestBody ApiSingleRequest<LinkCreationRequestDTO> linkCreationRequestDTO) {
+    LinkDTO link = linkService.createLink("userId", linkCreationRequestDTO.getRequest());
+    return new ResponseEntity<>(new ApiSingleResponse<>(link), HttpStatus.OK);
   }
 
   @PutMapping("/{linkId}")
-  public ResponseEntity<LinkDTO> modifyLink(
-      @PathVariable String linkId, @RequestBody LinkCreationRequestDTO linkCreationRequestDTO) {
-    LinkDTO link = linkService.modifyLink("userId", linkId, linkCreationRequestDTO);
-    return new ResponseEntity<>(link, HttpStatus.OK);
+  public ResponseEntity<ApiSingleResponse<LinkDTO>> modifyLink(
+      @PathVariable String linkId,
+      @RequestBody ApiSingleRequest<LinkCreationRequestDTO> linkCreationRequestDTO) {
+    LinkDTO link = linkService.modifyLink("userId", linkId, linkCreationRequestDTO.getRequest());
+    return new ResponseEntity<>(new ApiSingleResponse<>(link), HttpStatus.OK);
   }
 
   @DeleteMapping("/{linkId}")
-  public ResponseEntity<DeletionResponseDTO> deleteLink(@PathVariable String linkId) {
+  public ResponseEntity<ApiSingleResponse<DeletionResponseDTO>> deleteLink(
+      @PathVariable String linkId) {
     DeletionResponseDTO deletionResponseDTO = linkService.deleteLink("userId", linkId);
-    return new ResponseEntity<>(deletionResponseDTO, HttpStatus.OK);
+    return new ResponseEntity<>(new ApiSingleResponse<>(deletionResponseDTO), HttpStatus.OK);
   }
 }

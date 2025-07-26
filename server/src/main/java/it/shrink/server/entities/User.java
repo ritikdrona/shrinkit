@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User implements UserDetails {
 
   @Id

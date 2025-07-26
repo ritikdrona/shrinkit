@@ -23,6 +23,8 @@ public class UserService implements UserDetailsService {
 
   final PasswordEncoder passwordEncoder;
 
+  final Converter converter;
+
   public UserDTO createUser(UserCreationRequestDTO userCreationRequestDTO) {
     Optional<User> existingUser =
         userRepository.getUserByUsername(userCreationRequestDTO.getUsername());
@@ -40,7 +42,7 @@ public class UserService implements UserDetailsService {
             hashedPassword);
     userRepository.save(newUser);
 
-    return Converter.convert(newUser, new TypeReference<>() {});
+    return converter.convert(newUser, new TypeReference<>() {});
   }
 
   public UserDTO registerUser(UserCreationRequestDTO userCreationRequestDTO) {

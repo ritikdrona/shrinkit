@@ -12,5 +12,8 @@ server:
   servlet:
     context-path: /api
 jwt:
-  secretKey: asdebhuabKSADHJSAIDHSADncajhsdbcaudaAShbdkas
+  secretKey: asdebhuabKSADHJSAIDHSADncajhsdbcaudaAShbdka
   expiration: 2 # in hours
+logging:
+  level:
+    root: DEBUG

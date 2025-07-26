@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -20,21 +21,23 @@ public class LinkService {
 
   final LinkRepository linkRepository;
 
+  final Converter converter;
+
+  @Value("${link.shortcut.length:8}")
+  int shortcutLength;
+
   public List<LinkDTO> getLinksByUserId(String userId) {
     List<Link> links = linkRepository.getLinksByUserId(userId);
-    return Converter.convertCollection(links, new TypeReference<>() {});
+    return converter.convertCollection(links, new TypeReference<>() {});
   }
 
   public LinkDTO createLink(String userId, LinkCreationRequestDTO linkCreationRequestDTO) {
     Link newLink = new Link(userId, linkCreationRequestDTO.getUrl());
-
-    // TODO: generate shortcut
-    String shortcut = "shortcut";
-    newLink.setShortcut(shortcut);
+    newLink.setShortcut(generateValidShortcut());
 
     linkRepository.save(newLink);
 
-    return Converter.convert(newLink, new TypeReference<>() {});
+    return converter.convert(newLink, new TypeReference<>() {});
   }
 
   public LinkDTO modifyLink(
@@ -50,7 +53,7 @@ public class LinkService {
 
     linkRepository.save(link);
 
-    return Converter.convert(link, new TypeReference<>() {});
+    return converter.convert(link, new TypeReference<>() {});
   }
 
   public DeletionResponseDTO deleteLink(String userId, String linkId) {
@@ -68,5 +71,32 @@ public class LinkService {
 
     // unauthorized deletion attempt
     return new DeletionResponseDTO(false);
+  }
+
+  public String generateValidShortcut() {
+    log.debug("Generating a valid shortcut of length: {}", shortcutLength);
+
+    for (int i = 0; i < 10; i++) {
+      String shortcut = generateRandomString(shortcutLength);
+      Optional<Link> existingLink = linkRepository.getLinkByShortcut(shortcut);
+      if (existingLink.isEmpty()) {
+        return shortcut;
+      }
+    }
+
+    throw new RuntimeException(
+        "Unable to generate a valid shortcut after 10 attempts. Please try again.");
+  }
+
+  private String generateRandomString(int length) {
+    String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    StringBuilder result = new StringBuilder(length);
+
+    for (int i = 0; i < length; i++) {
+      int index = (int) (Math.random() * characters.length());
+      result.append(characters.charAt(index));
+    }
+
+    return result.toString();
   }
 }

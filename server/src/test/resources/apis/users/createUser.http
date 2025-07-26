@@ -1,0 +1,11 @@
+POST http://localhost:8000/api/users
+Content-Type: application/json
+
+{
+  "request": {
+    "role": "ADMIN",
+    "username": "admin",
+    "password": "admin",
+    "name": "Admin"
+  }
+}

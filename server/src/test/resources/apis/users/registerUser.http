@@ -1,0 +1,11 @@
+POST http://localhost:8000/api/users/register
+Content-Type: application/json
+
+{
+  "request": {
+    "role": "NORMAL_USER",
+    "username": "testuser5",
+    "password": "testuser5",
+    "name": "Test User 5"
+  }
+}

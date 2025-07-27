@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:21.0.7_6-jre AS runner
+FROM eclipse-temurin:21.0.7_6-jre-alpine-3.21 AS runner
 WORKDIR /app
 COPY --from=builder /app/target/*.jar .
 CMD java -jar *.jar

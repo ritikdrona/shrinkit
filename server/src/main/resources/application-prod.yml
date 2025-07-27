@@ -1,3 +1,3 @@
-logging:
-  level:
-    root: ERROR
+logging.level:
+  root: ERROR
+  it.shrink.server: INFO

@@ -14,9 +14,9 @@ server:
 jwt:
   secretKey: asdebhuabKSADHJSAIDHSADncajhsdbcaudaAShbdka
   expiration: 2 # in hours
-logging:
-  level:
-    root: DEBUG
+logging.level:
+  root: ERROR
+  it.shrink.server: DEBUG
 springdoc:
   api-docs:
     path: /openapi.json

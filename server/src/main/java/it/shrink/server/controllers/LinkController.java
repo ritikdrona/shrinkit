@@ -6,11 +6,13 @@ import it.shrink.server.dtos.request.LinkCreationRequestDTO;
 import it.shrink.server.dtos.response.ApiResponse;
 import it.shrink.server.dtos.response.ApiSingleResponse;
 import it.shrink.server.dtos.response.DeletionResponseDTO;
+import it.shrink.server.entities.User;
 import it.shrink.server.services.LinkService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +26,13 @@ public class LinkController {
   public ResponseEntity<ApiResponse<LinkDTO>> getLinks() {
     List<LinkDTO> links = linkService.getLinksByUserId("userId");
     return new ResponseEntity<>(new ApiResponse<>(links), HttpStatus.OK);
+  }
+
+  @GetMapping("/shortcut/{shortcut}")
+  public ResponseEntity<ApiSingleResponse<LinkDTO>> getLinkByShortcut(
+      @PathVariable String shortcut) {
+    LinkDTO link = linkService.getLinksByShortcut(shortcut);
+    return new ResponseEntity<>(new ApiSingleResponse<>(link), HttpStatus.OK);
   }
 
   @PostMapping

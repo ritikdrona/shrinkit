@@ -26,6 +26,14 @@ public class LinkService {
   @Value("${link.shortcut.length:8}")
   int shortcutLength;
 
+  public LinkDTO getLinksByShortcut(String shortcut) {
+    Optional<Link> link = linkRepository.getLinkByShortcut(shortcut);
+    if (link.isEmpty()) {
+      throw new RuntimeException("Link does not exist");
+    }
+    return converter.convert(link, new TypeReference<>() {});
+  }
+
   public List<LinkDTO> getLinksByUserId(String userId) {
     List<Link> links = linkRepository.getLinksByUserId(userId);
     return converter.convertCollection(links, new TypeReference<>() {});

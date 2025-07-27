@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import it.shrink.server.dtos.LinkDTO;
 import it.shrink.server.dtos.request.LinkCreationRequestDTO;
 import it.shrink.server.dtos.response.DeletionResponseDTO;
+import it.shrink.server.dtos.response.ShortcutLinkResponseDTO;
 import it.shrink.server.entities.Link;
 import it.shrink.server.repositories.LinkRepository;
 import it.shrink.server.utils.Converter;
@@ -26,12 +27,12 @@ public class LinkService {
   @Value("${link.shortcut.length:8}")
   int shortcutLength;
 
-  public LinkDTO getLinksByShortcut(String shortcut) {
+  public ShortcutLinkResponseDTO getLinksByShortcut(String shortcut) {
     Optional<Link> link = linkRepository.getLinkByShortcut(shortcut);
     if (link.isEmpty()) {
       throw new RuntimeException("Link does not exist");
     }
-    return converter.convert(link.get(), new TypeReference<>() {});
+    return new ShortcutLinkResponseDTO(link.get().getActualUrl());
   }
 
   public List<LinkDTO> getLinksByUserId(String userId) {

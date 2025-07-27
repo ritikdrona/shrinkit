@@ -6,6 +6,7 @@ import it.shrink.server.dtos.request.LinkCreationRequestDTO;
 import it.shrink.server.dtos.response.ApiResponse;
 import it.shrink.server.dtos.response.ApiSingleResponse;
 import it.shrink.server.dtos.response.DeletionResponseDTO;
+import it.shrink.server.dtos.response.ShortcutLinkResponseDTO;
 import it.shrink.server.entities.User;
 import it.shrink.server.services.LinkService;
 import java.util.List;
@@ -29,10 +30,10 @@ public class LinkController {
   }
 
   @GetMapping("/shortcut/{shortcut}")
-  public ResponseEntity<ApiSingleResponse<LinkDTO>> getLinkByShortcut(
+  public ResponseEntity<ApiSingleResponse<ShortcutLinkResponseDTO>> getLinkByShortcut(
       @PathVariable String shortcut) {
-    LinkDTO link = linkService.getLinksByShortcut(shortcut);
-    return new ResponseEntity<>(new ApiSingleResponse<>(link), HttpStatus.OK);
+    ShortcutLinkResponseDTO response = linkService.getLinksByShortcut(shortcut);
+    return new ResponseEntity<>(new ApiSingleResponse<>(response), HttpStatus.OK);
   }
 
   @PostMapping

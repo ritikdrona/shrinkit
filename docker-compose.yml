@@ -10,9 +10,24 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - shrinikit
+  api:
+    build:
+      context: server
+#      dockerfile: Dockerfile
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/shrinkit
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - shrinikit
 
 networks:
-  shrinikit: {}
+  shrinikit: { }
 
 volumes:
   postgres_data:

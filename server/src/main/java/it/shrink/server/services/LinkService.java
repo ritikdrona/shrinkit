@@ -31,7 +31,7 @@ public class LinkService {
     if (link.isEmpty()) {
       throw new RuntimeException("Link does not exist");
     }
-    return converter.convert(link, new TypeReference<>() {});
+    return converter.convert(link.get(), new TypeReference<>() {});
   }
 
   public List<LinkDTO> getLinksByUserId(String userId) {

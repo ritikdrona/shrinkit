@@ -7,6 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import it.shrink.server.config.properties.JwtConfigProperties;
 import it.shrink.server.dtos.UserDTO;
+import it.shrink.server.entities.User;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,16 +42,27 @@ public class JwtService {
         .compact();
   }
 
-  public String extractUserId(String token) {
-    Jwe<Claims> jwe =
-        Jwts.parser().decryptWith(getEncryptionKey()).build().parseEncryptedClaims(token);
+  public boolean isTokenValid(String token, User user) {
+    String userId = extractSubject(token);
+    return userId.equals(user.getId()) && !isTokenExpired(token);
+  }
+
+  public String extractSubject(String token) {
+    Jwe<Claims> jwe = extractClaims(token);
     return jwe.getPayload().getSubject();
+  }
+
+  public boolean isTokenExpired(String token) {
+    Jwe<Claims> jwe = extractClaims(token);
+    return jwe.getPayload().getExpiration().before(new Date());
+  }
+
+  private Jwe<Claims> extractClaims(String token) {
+    return Jwts.parser().decryptWith(getEncryptionKey()).build().parseEncryptedClaims(token);
   }
 
   private SecretKey getEncryptionKey() {
     byte[] keyBytes = Decoders.BASE64.decode(jwtConfigProperties.getSecretKey());
-    // TODO: remove this after testing
-    log.debug("Secret Key Byte Length: {}", keyBytes.length);
     return Keys.hmacShaKeyFor(keyBytes);
   }
 }

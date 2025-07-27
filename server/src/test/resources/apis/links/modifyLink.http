@@ -1,4 +1,4 @@
-PUT http://localhost:8000/api/links/aa8f53ad-89c3-43c8-8677-18ab844b7322
+PUT http://localhost:8000/links/aa8f53ad-89c3-43c8-8677-18ab844b7322
 Content-Type: application/json
 
 {

@@ -24,8 +24,8 @@ public class LinkController {
   final LinkService linkService;
 
   @GetMapping
-  public ResponseEntity<ApiResponse<LinkDTO>> getLinks() {
-    List<LinkDTO> links = linkService.getLinksByUserId("userId");
+  public ResponseEntity<ApiResponse<LinkDTO>> getLinks(@AuthenticationPrincipal User user) {
+    List<LinkDTO> links = linkService.getLinksByUserId(user.getId());
     return new ResponseEntity<>(new ApiResponse<>(links), HttpStatus.OK);
   }
 
@@ -38,23 +38,26 @@ public class LinkController {
 
   @PostMapping
   public ResponseEntity<ApiSingleResponse<LinkDTO>> createLink(
-      @RequestBody ApiSingleRequest<LinkCreationRequestDTO> linkCreationRequestDTO) {
-    LinkDTO link = linkService.createLink("userId", linkCreationRequestDTO.getRequest());
+      @RequestBody ApiSingleRequest<LinkCreationRequestDTO> linkCreationRequestDTO,
+      @AuthenticationPrincipal User user) {
+    LinkDTO link = linkService.createLink(user.getId(), linkCreationRequestDTO.getRequest());
     return new ResponseEntity<>(new ApiSingleResponse<>(link), HttpStatus.OK);
   }
 
   @PutMapping("/{linkId}")
   public ResponseEntity<ApiSingleResponse<LinkDTO>> modifyLink(
       @PathVariable String linkId,
-      @RequestBody ApiSingleRequest<LinkCreationRequestDTO> linkCreationRequestDTO) {
-    LinkDTO link = linkService.modifyLink("userId", linkId, linkCreationRequestDTO.getRequest());
+      @RequestBody ApiSingleRequest<LinkCreationRequestDTO> linkCreationRequestDTO,
+      @AuthenticationPrincipal User user) {
+    LinkDTO link =
+        linkService.modifyLink(user.getId(), linkId, linkCreationRequestDTO.getRequest());
     return new ResponseEntity<>(new ApiSingleResponse<>(link), HttpStatus.OK);
   }
 
   @DeleteMapping("/{linkId}")
   public ResponseEntity<ApiSingleResponse<DeletionResponseDTO>> deleteLink(
-      @PathVariable String linkId) {
-    DeletionResponseDTO deletionResponseDTO = linkService.deleteLink("userId", linkId);
+      @PathVariable String linkId, @AuthenticationPrincipal User user) {
+    DeletionResponseDTO deletionResponseDTO = linkService.deleteLink(user.getId(), linkId);
     return new ResponseEntity<>(new ApiSingleResponse<>(deletionResponseDTO), HttpStatus.OK);
   }
 }

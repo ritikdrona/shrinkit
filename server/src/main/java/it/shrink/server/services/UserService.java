@@ -9,7 +9,7 @@ import it.shrink.server.repositories.UserRepository;
 import it.shrink.server.utils.Converter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +25,7 @@ public class UserService implements UserDetailsService {
 
   final Converter converter;
 
+  @Secured("ADMIN")
   public UserDTO createUser(UserCreationRequestDTO userCreationRequestDTO) {
     Optional<User> existingUser =
         userRepository.getUserByUsername(userCreationRequestDTO.getUsername());
@@ -50,8 +51,17 @@ public class UserService implements UserDetailsService {
     return createUser(userCreationRequestDTO);
   }
 
+  public User findUserById(String userId) {
+    Optional<User> user = userRepository.findById(userId);
+    if (user.isPresent()) {
+      return user.get();
+    } else {
+      throw new UsernameNotFoundException("User not found with user id: " + userId);
+    }
+  }
+
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  public User loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<User> user = userRepository.getUserByUsername(username);
     if (user.isPresent()) {
       return user.get();

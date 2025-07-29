@@ -17,6 +17,3 @@ jwt:
 logging.level:
   root: ERROR
   it.shrink.server: DEBUG
-springdoc:
-  api-docs:
-    path: /openapi.json

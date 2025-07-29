@@ -38,8 +38,8 @@ public class SecurityConfig {
             auth.requestMatchers(
                     "/authenticate",
                     "/users/register",
+                    "/v3/api-docs/**",
                     "/swagger-ui/**",
-                    "/openapi.json",
                     "/actuator/**")
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/links/shortcut/*")

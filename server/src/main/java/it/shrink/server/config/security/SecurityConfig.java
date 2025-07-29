@@ -47,6 +47,8 @@ public class SecurityConfig {
                 .anyRequest()
                 .authenticated());
 
+    //    http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+
     http.sessionManagement(
         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

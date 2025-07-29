@@ -36,8 +36,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     final String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-      log.debug("No authentication token found in request header");
-      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+      filterChain.doFilter(request, response);
       return;
     }
 
@@ -59,12 +58,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
           authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
           SecurityContextHolder.getContext().setAuthentication(authToken);
-          filterChain.doFilter(request, response);
-        } else {
-          log.debug("Token is invalid");
-          response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         }
       }
+
+      filterChain.doFilter(request, response);
     } catch (Exception exception) {
       handlerExceptionResolver.resolveException(request, response, null, exception);
     }
